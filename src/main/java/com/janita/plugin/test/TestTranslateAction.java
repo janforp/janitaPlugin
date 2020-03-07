@@ -9,6 +9,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.janita.plugin.config.TranslateConfig;
 import com.janita.plugin.domain.TranslationResult;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -40,7 +41,7 @@ public class TestTranslateAction extends AnAction {
         //调翻译接口
         Gson gson = new Gson();
         OkHttpUtils.post()
-                .url("http://fanyi.youdao.com/openapi.do")
+                .url(TranslateConfig.TRANSLATE_URL)
                 .addParams("keyfrom", "HMTranslate")
                 .addParams("key", "278683081")
                 .addParams("type", "data")
