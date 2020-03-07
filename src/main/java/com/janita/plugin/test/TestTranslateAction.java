@@ -9,7 +9,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.janita.plugin.dto.TranslationResult;
+import com.janita.plugin.domain.TranslationResult;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 import okhttp3.Call;
@@ -67,5 +67,4 @@ public class TestTranslateAction extends AnAction {
     private void showPop(Project project, Editor editor, TranslationResult translationResult) {
         Messages.showMessageDialog(project, translationResult.toString(), "翻译结果", null);
     }
-
 }

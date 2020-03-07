@@ -1,4 +1,4 @@
-package com.janita.plugin.dto;
+package com.janita.plugin.domain;
 
 import java.util.Arrays;
 import java.util.List;
