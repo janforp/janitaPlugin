@@ -1,0 +1,45 @@
+<idea-plugin>
+    <id>com.your.company.unique.plugin.id</id>
+    <name>test action</name>
+    <version>1.0</version>
+    <vendor email="zhucj@yourcompany.com" url="http://www.janita.com">janita</vendor>
+
+    <description><![CDATA[这是我的学习插件开发工程这是我的学习插件开发工程这是我的学习插件开发工程这是我的学习插件开发工程]]></description>
+
+    <change-notes><![CDATA[这是我的学习插件开发工程这是我的学习插件开发工程这是我的学习插件开发工程这是我的学习插件开发工程]]>
+    </change-notes>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="173.0"/>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+        <action id="HmPlugins.HelloTest"
+                class="com.janita.plugin.test.HelloTestAction"
+                text="HelloAction"
+                description="My first plugin test action">
+            <!--添加该功能到编辑菜单edit下面到redo后面-->
+            <add-to-group group-id="EditMenu" anchor="after" relative-to-action="$Redo"/>
+            <!--开机键是command + H-->
+            <keyboard-shortcut keymap="$default" first-keystroke="meta H"/>
+        </action>
+
+        <action id="HmPlugins.TestTranslateAction"
+                class="com.janita.plugin.test.TestTranslateAction"
+                text="TestTranslateAction"
+                description="TestTranslateAction">
+            <add-to-group group-id="CodeMenu" anchor="after" relative-to-action="Generate"/>
+        </action>
+    </actions>
+
+</idea-plugin>
