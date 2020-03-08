@@ -5,12 +5,10 @@ import com.janita.plugin.autgencode.bean.TableEntity;
 import com.janita.plugin.autgencode.component.AutoCodeConfigComponent;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.WordUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -31,64 +29,6 @@ import java.util.zip.ZipOutputStream;
 @SuppressWarnings("all")
 public class GenUtils {
 
-    private static final String ENTITY = "Entity.java.vm";
-
-    private static final String DAO_JAVA = "Dao.java.vm";
-
-    private static final String DAO_XML = "Dao.xml.vm";
-
-    private static final String SERVICE = "Service.java.vm";
-
-    private static final String SERVICE_IMPL = "ServiceImpl.java.vm";
-
-    private static final String CONTROLLER = "Controller.java.vm";
-
-    private static final String LIST_HTML = "list.html.vm";
-
-    private static final String LIST_JS = "list.js.vm";
-
-    private static final String MENU = "menu.sql.vm";
-
-    public static List<String> getTemplates() {
-        List<String> templates = new ArrayList<>();
-        templates.add("template/" + ENTITY);
-        templates.add("template/" + DAO_JAVA);
-        templates.add("template/" + DAO_XML);
-        templates.add("template/" + SERVICE);
-        templates.add("template/" + SERVICE_IMPL);
-        templates.add("template/" + CONTROLLER);
-        templates.add("template/" + LIST_HTML);
-        templates.add("template/" + LIST_JS);
-        templates.add("template/" + MENU);
-        return templates;
-    }
-
-    /**
-     * 获取配置信息
-     */
-    public static Map<String, String> getConfig() {
-        Map<String, String> map = new HashMap<>(32);
-        map.put("char", "String");
-        map.put("varchar", "String");
-        map.put("tinytext", "String");
-        map.put("text", "String");
-        map.put("mediumtext", "String");
-        map.put("longtext", "String");
-        map.put("tinyint", "Integer");
-        map.put("smallint", "Integer");
-        map.put("mediumint", "Integer");
-        map.put("int", "Integer");
-        map.put("integer", "Integer");
-        map.put("bigint", "Long");
-        map.put("float", "Float");
-        map.put("double", "Double");
-        map.put("decimal", "BigDecimal");
-        map.put("date", "Date");
-        map.put("datetime", "Date");
-        map.put("timestamp", "Date");
-        return map;
-    }
-
     /**
      * 生成代码
      */
@@ -96,8 +36,7 @@ public class GenUtils {
         com.intellij.openapi.application.Application application = com.intellij.openapi.application.ApplicationManager.getApplication();
         AutoCodeConfigComponent applicationComponent = application.getComponent(AutoCodeConfigComponent.class);
         //配置信息
-        Map<String, String> config = getConfig();
-
+        Map<String, String> jdbcTypeAndJavaTypeMap = NameUtils.getJdbcTypeAndJavaTypeMap();
         //表信息
         TableEntity tableEntity = new TableEntity();
         tableEntity.setTableName(table.get("tableName"));
@@ -106,7 +45,7 @@ public class GenUtils {
         String pre = tablePrefix.replace("_", "").toLowerCase();
 
         //表名转换成Java类名
-        String className = tableToJava(tableEntity.getTableName(), tablePrefix);
+        String className = NameUtils.tableToJava(tableEntity.getTableName(), tablePrefix);
         tableEntity.setClassName(className);
         tableEntity.setClassname(StringUtils.uncapitalize(className));
 
@@ -122,12 +61,12 @@ public class GenUtils {
             columnEntity.setExtra(column.get("extra"));
 
             //列名转换成Java属性名
-            String attrName = columnToJava(columnEntity.getColumnName());
+            String attrName = NameUtils.columnToJava(columnEntity.getColumnName());
             columnEntity.setAttrName(attrName);
             columnEntity.setAttrname(StringUtils.uncapitalize(attrName));
 
             //列的数据类型，转换成Java类型
-            String attrType = config.getOrDefault(columnEntity.getDataType().split("\\(")[0], "unknowType");
+            String attrType = jdbcTypeAndJavaTypeMap.getOrDefault(columnEntity.getDataType().split("\\(")[0], "unknowType");
 
             columnEntity.setAttrType(attrType);
 
@@ -207,7 +146,7 @@ public class GenUtils {
         VelocityContext context = new VelocityContext(map);
 
         //获取模板列表
-        List<String> templates = getTemplates();
+        List<String> templates = NameUtils.getTemplates();
         for (String template : templates) {
             //渲染模板
             StringWriter sw = new StringWriter();
@@ -216,7 +155,7 @@ public class GenUtils {
 
             try {
                 //添加到zip
-                String fileName = getFileName(template, tableEntity.getClassName(), "com.platform", pre);
+                String fileName = NameUtils.getFileName(template, tableEntity.getClassName(), "com.platform", pre);
                 fileName = (fileName == null ? "" : fileName);
                 zip.putNextEntry(new ZipEntry(fileName));
                 IOUtils.write(sw.toString(), zip, "UTF-8");
@@ -226,72 +165,6 @@ public class GenUtils {
                 e.printStackTrace();
             }
         }
-    }
-
-    /**
-     * 列名转换成Java属性名
-     */
-    public static String columnToJava(String columnName) {
-        return WordUtils.capitalizeFully(columnName, new char[] { '_' }).replace("_", "");
-    }
-
-    /**
-     * 表名转换成Java类名
-     */
-    public static String tableToJava(String tableName, String tablePrefix) {
-        if (StringUtils.isNotBlank(tablePrefix)) {
-            tableName = tableName.replace(tablePrefix, "");
-        }
-        return columnToJava(tableName);
-    }
-
-    /**
-     * 获取文件名
-     */
-    public static String getFileName(String template, String className, String packageName, String tablePrefix) {
-        String packagePath = "main" + File.separator + "java" + File.separator;
-        if (StringUtils.isNotBlank(packageName)) {
-            packagePath += packageName.replace(".", File.separator) + File.separator;
-        }
-
-        if (template.contains(ENTITY)) {
-            return packagePath + "entity" + File.separator + className + "Entity.java";
-        }
-
-        if (template.contains(DAO_JAVA)) {
-            return packagePath + "dao" + File.separator + className + "Dao.java";
-        }
-
-        if (template.contains(DAO_XML)) {
-            return packagePath + "dao" + File.separator + className + "Dao.xml";
-        }
-
-        if (template.contains(SERVICE)) {
-            return packagePath + "service" + File.separator + className + "Service.java";
-        }
-
-        if (template.contains(SERVICE_IMPL)) {
-            return packagePath + "service" + File.separator + "impl" + File.separator + className + "ServiceImpl.java";
-        }
-
-        if (template.contains(CONTROLLER)) {
-            return packagePath + "controller" + File.separator + className + "Controller.java";
-        }
-
-        if (template.contains(LIST_HTML)) {
-            return "main" + File.separator + "webapp" + File.separator + "WEB-INF" + File.separator + "page"
-                    + File.separator + tablePrefix + File.separator + className.toLowerCase() + ".html";
-        }
-
-        if (template.contains(LIST_JS)) {
-            return "main" + File.separator + "webapp" + File.separator + "js" + File.separator + tablePrefix + File.separator + className.toLowerCase() + ".js";
-        }
-
-        if (template.contains(MENU)) {
-            return className.toLowerCase() + "_menu.sql";
-        }
-
-        return null;
     }
 
     public static void main(String[] args) throws Exception {

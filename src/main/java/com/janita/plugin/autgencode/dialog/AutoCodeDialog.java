@@ -5,11 +5,13 @@ import com.janita.plugin.autgencode.component.AutoCodeConfigComponent;
 import com.janita.plugin.autgencode.util.DatabaseUtil;
 import com.janita.plugin.autgencode.util.DateUtils;
 import com.janita.plugin.autgencode.util.GenUtils;
+import com.janita.plugin.autgencode.util.StatementUtils;
 import org.apache.commons.io.IOUtils;
 
 import javax.swing.*;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
+import java.sql.Connection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -104,23 +106,24 @@ public class AutoCodeDialog extends JDialog {
         AutoCodeConfigComponent config = application.getComponent(AutoCodeConfigComponent.class);
         String[] tableNames = bean.getTxtTableName().split(",");
         DatabaseUtil dbUtil = new DatabaseUtil(bean);
-        ZipOutputStream zip = new ZipOutputStream(outputStream);
+        ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
 
         try {
             for (String tableName : tableNames) {
+                Connection connection = dbUtil.getConnection();
                 //查询表信息
-                Map<String, String> table = dbUtil.findTableDescription(tableName);
-                if (table.size() == 0) {
+                Map<String, String> tableNameCommentMap = StatementUtils.findTableDescription(connection, tableName);
+                if (tableNameCommentMap.size() == 0) {
                     JOptionPane.showMessageDialog(this, "代码生成错误！" + tableName + "表不存在！");
                     return false;
                 }
                 //查询列信息
-                List<Map<String, String>> columns = dbUtil.findTableColumns(tableName);
+                List<Map<String, String>> columnMap = StatementUtils.findTableColumns(connection, tableName);
                 //生成代码
-                GenUtils.generatorCode(table, columns, zip);
+                GenUtils.generatorCode(tableNameCommentMap, columnMap, zipOutputStream);
             }
-            zip.close();
-            FileOutputStream out = new FileOutputStream(config.getProjectPath() + "/" + DateUtils.format(new Date(), "yyyyMMddHHmmss") + ".zip");
+            zipOutputStream.close();
+            FileOutputStream out = new FileOutputStream(config.getProjectPath() + "/" + DateUtils.format(new Date(), "yyyyMMddHHmmss") + ".zipOutputStream");
             IOUtils.write(outputStream.toByteArray(), out);
             return true;
         } catch (Exception e) {
