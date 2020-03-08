@@ -2,7 +2,6 @@ package com.janita.plugin.mybatislog2sql.parse;
 
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
-import com.janita.plugin.mybatislog2sql.NotificationThread;
 import com.janita.plugin.mybatislog2sql.constant.LogConstants;
 
 import java.util.Arrays;

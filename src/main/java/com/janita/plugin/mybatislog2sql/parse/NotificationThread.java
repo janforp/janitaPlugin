@@ -1,4 +1,4 @@
-package com.janita.plugin.mybatislog2sql;
+package com.janita.plugin.mybatislog2sql.parse;
 
 import com.intellij.notification.Notification;
 import com.intellij.notification.Notifications;
