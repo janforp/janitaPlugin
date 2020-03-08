@@ -84,7 +84,8 @@ public class AutoCodeDialog extends JDialog {
         bean.setTxtCreator(config.getCreator());
         bean.setTxtProjectPath(config.getProjectPath());
         bean.setTxtEmail(config.getEmail());
-        bean.setTxtTableName(this.tableName.getText().trim().toUpperCase());
+        String tableNames = this.tableName.getText().trim();
+        bean.setTxtTableName(tableNames);
         return bean;
     }
 
