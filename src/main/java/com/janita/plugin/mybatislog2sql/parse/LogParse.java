@@ -31,22 +31,21 @@ public class LogParse {
         }
 
         if (Objects.isNull(sqlLine)) {
-            Notification notification = new Notification(
+            //右下角的提示
+            new NotificationThread(new Notification(
                     "Copy As Executable Sql",
                     "Copy As executable sql",
                     "selected log with \"Preparing:\" line, nothing will send to clipboard",
                     NotificationType.WARNING
-            );
-            new NotificationThread(notification).start();
+            )).start();
             return LogConstants.EMPTY;
         } else if (Objects.isNull(valueLine)) {
-            Notification notification = new Notification(
+            new NotificationThread(new Notification(
                     "Copy As Executable Sql",
                     "Copy As executable sql",
                     "selected log with \"Parameters:\" line, nothing will send to clipboard",
                     NotificationType.WARNING
-            );
-            new NotificationThread(notification).start();
+            )).start();
             return LogConstants.EMPTY;
         }
 

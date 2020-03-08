@@ -56,7 +56,7 @@
                 class="com.janita.plugin.mybatislog2sql.MybatisLog2SqlAction"
                 text="MybatisLog2SqlAction"
                 description="MybatisLog2SqlAction">
-            <add-to-group group-id="ConsoleEditorPopupMenu" anchor="after" relative-to-action="ConsoleView.ClearAll"/>
+            <add-to-group group-id="CodeMenu" anchor="after" relative-to-action="Generate"/>
         </action>
     </actions>
 

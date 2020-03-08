@@ -17,6 +17,17 @@ import java.awt.datatransfer.StringSelection;
 /**
  * mybatis日志转换为可执行大sql
  *
+ * Preparing: select * from student where id = ? and name = ?
+ * Parameters: 1(String), 张三(String)
+ * 复制上面的日志
+ * 粘贴结果：
+ * select
+ * *
+ * from
+ * student
+ * where
+ * id = '1'
+ *
  * @author zhucj
  * @since 202003
  */
