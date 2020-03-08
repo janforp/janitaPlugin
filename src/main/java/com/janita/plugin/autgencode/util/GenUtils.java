@@ -13,8 +13,6 @@ import org.apache.velocity.app.Velocity;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -131,7 +129,7 @@ public class GenUtils {
         properties.put("output.encoding", "UTF-8");
         properties.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.NullLogChute");
         Velocity.init(properties);
-        Map<String, Object> map = buildMap(genTemp);
+        Map<String, Object> map = VelocityUtils.buildMapForVelocityContext(genTemp);
         VelocityContext context = new VelocityContext(map);
         //获取模板列表
         List<String> templates = NameUtils.getTemplates();
@@ -152,32 +150,6 @@ public class GenUtils {
                 e.printStackTrace();
             }
         }
-    }
-
-    private static Map<String, Object> buildMap(GenTemp temp) {
-        com.intellij.openapi.application.Application application = com.intellij.openapi.application.ApplicationManager.getApplication();
-        AutoCodeConfigComponent applicationComponent = application.getComponent(AutoCodeConfigComponent.class);
-        String pre = temp.getPre();
-        TableEntity tableEntity = temp.getTableEntity();
-        boolean hasBigDecimal = temp.isHasBigDecimal();
-        boolean hasDate = temp.isHasDate();
-        String packageName = applicationComponent.getPackageName();
-        //封装模板数据
-        Map<String, Object> map = new HashMap<>(32);
-        map.put("tableName", tableEntity.getTableName());
-        map.put("comments", tableEntity.getComments());
-        map.put("pk", tableEntity.getPk());
-        map.put("className", tableEntity.getClassName());
-        map.put("classname", tableEntity.getClassname());
-        map.put("pathName", tableEntity.getClassname().toLowerCase());
-        map.put("columns", tableEntity.getColumns());
-        map.put("package", packageName);
-        map.put("author", applicationComponent.getCreator());
-        map.put("datetime", DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
-        map.put("hasDate", hasDate);
-        map.put("hasBigDecimal", hasBigDecimal);
-        map.put("pre", pre);
-        return map;
     }
 
     public static void main(String[] args) throws Exception {
