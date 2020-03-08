@@ -37,17 +37,17 @@ public class StatementUtils {
 
     public static Map<String, String> getTableDescription(Connection conn, String tableName)
             throws Exception {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         Map<String, String> map = new HashMap<>(4);
         try {
             String sql = String.format(SELECT_TABLE_NAME_COMMENT, tableName);
-            ps = conn.prepareStatement(sql);
-            ps.setString(1, tableName);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                String tableNameFromDb = rs.getString("TABLE_NAME");
-                String comment = rs.getString("COMMENT");
+            preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, tableName);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                String tableNameFromDb = resultSet.getString("TABLE_NAME");
+                String comment = resultSet.getString("COMMENT");
                 map.put("tableName", tableNameFromDb);
                 map.put("tableComment", comment);
             }
@@ -56,8 +56,8 @@ public class StatementUtils {
             throw e;
         } finally {
             try {
-                ps.close();
-                rs.close();
+                preparedStatement.close();
+                resultSet.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -66,34 +66,37 @@ public class StatementUtils {
 
     public static List<Map<String, String>> queryTableColumnList(Connection conn, String tableName)
             throws Exception {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
             String sql = String.format(SELECT_COLUMN_INFO, tableName);
-            ps = conn.prepareStatement(sql);
-            rs = ps.executeQuery();
-            List<Map<String, String>> columns = new ArrayList<>();
-            Map<String, String> column = null;
-            while (rs.next()) {
-                column = new HashMap<>(8);
-                column.put("columnName", rs.getString("columnName"));
-                column.put("dataType", rs.getString("dataType"));
-                column.put("columnComment", rs.getString("columnComment"));
-                column.put("columnKey", rs.getString("columnKey"));
-                column.put("extra", rs.getString("extra"));
-                columns.add(column);
+            preparedStatement = conn.prepareStatement(sql);
+            resultSet = preparedStatement.executeQuery();
+            List<Map<String, String>> columnMapList = new ArrayList<>();
+            while (resultSet.next()) {
+                Map<String, String> columnMap = buildOneColumnMap(resultSet);
+                columnMapList.add(columnMap);
             }
-            return columns;
+            return columnMapList;
         } catch (SQLException e) {
             throw e;
         } finally {
             try {
-                ps.close();
-                rs.close();
+                preparedStatement.close();
+                resultSet.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    private static Map<String, String> buildOneColumnMap(ResultSet resultSet) throws SQLException {
+        Map<String, String> columnMap = new HashMap<>(8);
+        columnMap.put("columnName", resultSet.getString("columnName"));
+        columnMap.put("dataType", resultSet.getString("dataType"));
+        columnMap.put("columnComment", resultSet.getString("columnComment"));
+        columnMap.put("columnKey", resultSet.getString("columnKey"));
+        columnMap.put("extra", resultSet.getString("extra"));
+        return columnMap;
+    }
 }
