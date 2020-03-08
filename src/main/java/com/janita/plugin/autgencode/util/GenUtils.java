@@ -25,23 +25,32 @@ import java.util.zip.ZipOutputStream;
 /**
  * 代码生成器   工具类
  *
- * @author lipengjun
- * @email 939961241@qq.com
- * @date 2017年1月3日 下午6:35:28
+ * @author zhucj
+ * @since 202003
  */
+@SuppressWarnings("all")
 public class GenUtils {
+
     private static final String ENTITY = "Entity.java.vm";
+
     private static final String DAO_JAVA = "Dao.java.vm";
+
     private static final String DAO_XML = "Dao.xml.vm";
+
     private static final String SERVICE = "Service.java.vm";
+
     private static final String SERVICE_IMPL = "ServiceImpl.java.vm";
+
     private static final String CONTROLLER = "Controller.java.vm";
+
     private static final String LIST_HTML = "list.html.vm";
+
     private static final String LIST_JS = "list.js.vm";
+
     private static final String MENU = "menu.sql.vm";
 
     public static List<String> getTemplates() {
-        List<String> templates = new ArrayList<String>();
+        List<String> templates = new ArrayList<>();
         templates.add("template/" + ENTITY);
         templates.add("template/" + DAO_JAVA);
         templates.add("template/" + DAO_XML);
@@ -83,8 +92,7 @@ public class GenUtils {
     /**
      * 生成代码
      */
-    public static void generatorCode(Map<String, String> table,
-                                     List<Map<String, String>> columns, ZipOutputStream zip) throws Exception {
+    public static void generatorCode(Map<String, String> table, List<Map<String, String>> columns, ZipOutputStream zip) {
         com.intellij.openapi.application.Application application = com.intellij.openapi.application.ApplicationManager.getApplication();
         AutoCodeConfigComponent applicationComponent = application.getComponent(AutoCodeConfigComponent.class);
         //配置信息
@@ -103,7 +111,7 @@ public class GenUtils {
         tableEntity.setClassname(StringUtils.uncapitalize(className));
 
         //列信息
-        List<ColumnEntity> columsList = new ArrayList<>();
+        List<ColumnEntity> columnList = new ArrayList<>();
         boolean hasDate = false;
         boolean hasBigDecimal = false;
         for (Map<String, String> column : columns) {
@@ -135,9 +143,9 @@ public class GenUtils {
                 tableEntity.setPk(columnEntity);
             }
 
-            columsList.add(columnEntity);
+            columnList.add(columnEntity);
         }
-        tableEntity.setColumns(columsList);
+        tableEntity.setColumns(columnList);
 
         //若没主键
         if (tableEntity.getPk() == null) {
@@ -208,7 +216,9 @@ public class GenUtils {
 
             try {
                 //添加到zip
-                zip.putNextEntry(new ZipEntry(getFileName(template, tableEntity.getClassName(), "com.platform", pre)));
+                String fileName = getFileName(template, tableEntity.getClassName(), "com.platform", pre);
+                fileName = (fileName == null ? "" : fileName);
+                zip.putNextEntry(new ZipEntry(fileName));
                 IOUtils.write(sw.toString(), zip, "UTF-8");
                 sw.close();
                 zip.closeEntry();
@@ -222,7 +232,7 @@ public class GenUtils {
      * 列名转换成Java属性名
      */
     public static String columnToJava(String columnName) {
-        return WordUtils.capitalizeFully(columnName, new char[]{'_'}).replace("_", "");
+        return WordUtils.capitalizeFully(columnName, new char[] { '_' }).replace("_", "");
     }
 
     /**

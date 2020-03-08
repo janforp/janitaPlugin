@@ -1,9 +1,13 @@
 package com.janita.plugin.autgencode.bean;
 
 /**
- * @author 李鹏军
+ * 自动代码生成
+ *
+ * @author zhucj
+ * @since 202003
  */
 public class ParamBean {
+
     private String txtDatabaseUrl;
 
     private String txtDatabaseUser;
@@ -13,7 +17,9 @@ public class ParamBean {
     private String txtProjectPath;
 
     private String txtTableName;
+
     private String txtCreator;
+
     private String txtEmail;
 
     public String getTxtProjectPath() {
@@ -43,7 +49,6 @@ public class ParamBean {
 
         this.txtCreator = txtCreator;
     }
-
 
     public String getTxtDatabaseUrl() {
 
@@ -86,22 +91,12 @@ public class ParamBean {
     @Override
     public String toString() {
 
-        StringBuilder sb = new StringBuilder("");
-
-        sb.append("txtDatabaseUrl:" + this.txtDatabaseUrl + "\n");
-
-        sb.append("txtDatabaseUser:" + this.txtDatabaseUser + "\n");
-
-        sb.append("txtDatabasePwd:" + this.txtDatabasePwd + "\n");
-
-        sb.append("txtProjectPath:" + this.txtProjectPath + "\n");
-
-        sb.append("txtTableName:" + this.txtTableName + "\n");
-
-        sb.append("txtCreator:" + this.txtCreator + "\n");
-
-        sb.append("txtEmail:" + this.txtEmail + "\n");
-
-        return sb.toString();
+        return "" + "txtDatabaseUrl:" + this.txtDatabaseUrl + "\n"
+                + "txtDatabaseUser:" + this.txtDatabaseUser + "\n"
+                + "txtDatabasePwd:" + this.txtDatabasePwd + "\n"
+                + "txtProjectPath:" + this.txtProjectPath + "\n"
+                + "txtTableName:" + this.txtTableName + "\n"
+                + "txtCreator:" + this.txtCreator + "\n"
+                + "txtEmail:" + this.txtEmail + "\n";
     }
 }

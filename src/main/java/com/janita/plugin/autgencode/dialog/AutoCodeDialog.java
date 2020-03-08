@@ -8,8 +8,6 @@ import com.janita.plugin.autgencode.util.GenUtils;
 import org.apache.commons.io.IOUtils;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.util.Date;
@@ -18,38 +16,32 @@ import java.util.Map;
 import java.util.zip.ZipOutputStream;
 
 /**
- * @author 李鹏军
+ * 自动代码生成
+ *
+ * @author zhucj
+ * @since 202003
  */
+@SuppressWarnings("all")
 public class AutoCodeDialog extends JDialog {
+
     private JPanel contentPane;
-    private JButton buttonOK;
+
+    private JButton buttonOk;
+
     private JButton buttonCancel;
+
     private JTextField tableName;
-    private ParamBean bean = null;
 
     public AutoCodeDialog() {
         setContentPane(this.contentPane);
         setModal(true);
-        getRootPane().setDefaultButton(this.buttonOK);
+        getRootPane().setDefaultButton(this.buttonOk);
         setSize(400, 200);
         setLocationRelativeTo(null);
         setTitle("platform-gen");
 
-        this.buttonOK.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AutoCodeDialog.this.onOK();
-            }
-
-        });
-        this.buttonCancel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AutoCodeDialog.this.onCancel();
-            }
-
-
-        });
+        this.buttonOk.addActionListener(e -> AutoCodeDialog.this.onOk());
+        this.buttonCancel.addActionListener(e -> AutoCodeDialog.this.onCancel());
         setDefaultCloseOperation(0);
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
@@ -57,20 +49,14 @@ public class AutoCodeDialog extends JDialog {
                 AutoCodeDialog.this.onCancel();
             }
 
-
         });
-        this.contentPane.registerKeyboardAction(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AutoCodeDialog.this.onCancel();
-            }
-        }, KeyStroke.getKeyStroke(27, 0), 1);
+        this.contentPane.registerKeyboardAction(e -> AutoCodeDialog.this.onCancel(), KeyStroke.getKeyStroke(27, 0), 1);
     }
 
-    private void onOK() {
-        this.bean = buildParam();
-        if (this.bean != null) {
-            if (creatFile(this.bean)) {
+    private void onOk() {
+        ParamBean bean = buildParam();
+        if (bean != null) {
+            if (creatFile(bean)) {
                 JOptionPane.showMessageDialog(getContentPane(), "代码生成执行完毕！");
                 dispose();
             }
@@ -81,51 +67,42 @@ public class AutoCodeDialog extends JDialog {
         dispose();
     }
 
-
     private ParamBean buildParam() {
-        if (paramCheck().booleanValue()) {
-            com.intellij.openapi.application.Application application = com.intellij.openapi.application.ApplicationManager.getApplication();
-            AutoCodeConfigComponent config = application.getComponent(AutoCodeConfigComponent.class);
-
-            ParamBean bean = new ParamBean();
-            bean.setTxtDatabaseUrl("jdbc:mysql://" + config.getDatabaseUrl() + "?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf-8");
-            bean.setTxtDatabaseUser(config.getDatabaseUser());
-            bean.setTxtDatabasePwd(config.getDatabasePwd());
-            bean.setTxtCreator(config.getCreator());
-            bean.setTxtProjectPath(config.getProjectPath());
-            bean.setTxtEmail(config.getEmail());
-            bean.setTxtTableName(this.tableName.getText().trim().toUpperCase());
-            return bean;
+        boolean booleanValue = paramCheck();
+        if (!booleanValue) {
+            return null;
         }
+        com.intellij.openapi.application.Application application
+                = com.intellij.openapi.application.ApplicationManager.getApplication();
+        AutoCodeConfigComponent config = application.getComponent(AutoCodeConfigComponent.class);
 
-        return null;
+        ParamBean bean = new ParamBean();
+        bean.setTxtDatabaseUrl(
+                "jdbc:mysql://" + config.getDatabaseUrl() + "?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf-8");
+        bean.setTxtDatabaseUser(config.getDatabaseUser());
+        bean.setTxtDatabasePwd(config.getDatabasePwd());
+        bean.setTxtCreator(config.getCreator());
+        bean.setTxtProjectPath(config.getProjectPath());
+        bean.setTxtEmail(config.getEmail());
+        bean.setTxtTableName(this.tableName.getText().trim().toUpperCase());
+        return bean;
     }
 
     private Boolean paramCheck() {
-
-        Boolean checkResult = Boolean.valueOf(true);
-
+        Boolean checkResult = Boolean.TRUE;
         if ("".equals(this.tableName.getText().trim())) {
-
             JOptionPane.showMessageDialog(this, "请填写数据库表名！");
-
-            checkResult = Boolean.valueOf(false);
+            checkResult = Boolean.FALSE;
         }
-
         return checkResult;
     }
 
     private boolean creatFile(ParamBean bean) {
-
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
         com.intellij.openapi.application.Application application = com.intellij.openapi.application.ApplicationManager.getApplication();
         AutoCodeConfigComponent config = application.getComponent(AutoCodeConfigComponent.class);
-
         String[] tableNames = bean.getTxtTableName().split(",");
-
         DatabaseUtil dbUtil = new DatabaseUtil(bean);
-
         ZipOutputStream zip = new ZipOutputStream(outputStream);
 
         try {
@@ -141,14 +118,10 @@ public class AutoCodeDialog extends JDialog {
                 //生成代码
                 GenUtils.generatorCode(table, columns, zip);
             }
-
             zip.close();
-
             FileOutputStream out = new FileOutputStream(config.getProjectPath() + "/" + DateUtils.format(new Date(), "yyyyMMddHHmmss") + ".zip");
-
             IOUtils.write(outputStream.toByteArray(), out);
             return true;
-
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "代码生成错误！" + generateMessage(e));
             e.printStackTrace();
@@ -172,7 +145,6 @@ public class AutoCodeDialog extends JDialog {
         // 记录详细日志到LOG文件
         String message = "";
         for (StackTraceElement stackTraceElement : exception.getStackTrace()) {
-
             if (stackTraceElement.toString().startsWith("com.platform")) {
                 message += "类名：" + stackTraceElement.getFileName() + ";方法："
                         + stackTraceElement.getMethodName() + ";行号："

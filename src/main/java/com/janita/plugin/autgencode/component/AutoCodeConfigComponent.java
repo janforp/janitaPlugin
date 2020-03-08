@@ -4,7 +4,6 @@ import com.intellij.openapi.components.BaseComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.janita.plugin.autgencode.form.AutoCodeConfigForm;
 import org.jetbrains.annotations.Nls;
@@ -14,34 +13,33 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 
 /**
- * @author 李鹏军
+ * 自动代码生成
+ *
+ * @author zhucj
+ * @since 202003
  */
-@State(name = "com.platform.gen.component.AutoCodeConfigComponent", storages = {@com.intellij.openapi.components.Storage(file = "$APP_CONFIG$/platform-gen.xml")})
+@SuppressWarnings("all")
+@State(name = "com.janita.plugin.autgencode.component.AutoCodeConfigComponent", storages = { @com.intellij.openapi.components.Storage(file = "$APP_CONFIG$/auto-gen-code.xml") })
 public class AutoCodeConfigComponent implements BaseComponent, Configurable, PersistentStateComponent<AutoCodeConfigComponent> {
-    public String databaseUrl = "localhost:3306/platform";
-    public String databaseUser = "root";
-    public String databasePwd = "123456";
-    public String creator = "李鹏军";
-    public String projectPath;
-    public String email = "939961241@qq.com";
+
+    private String databaseUrl = "localhost:3306/platform";
+
+    private String databaseUser = "root";
+
+    private String databasePwd = "123456";
+
+    private String creator = "janita";
+
+    private String projectPath;
+
+    private String email = "804979367@qq.com";
+
     private AutoCodeConfigForm form;
-
-    @Override
-    public void initComponent() {
-    }
-
-    @Override
-    public void disposeComponent() {
-    }
 
     @NotNull
     @Override
     public String getComponentName() {
-        String tmp20 = "AutoCodeConfig";
-        if (tmp20 == null) {
-            throw new IllegalStateException(String.format("@NotNull method %s.%s must not return null", new Object[]{"com/platform/gen/component/AutoCodeConfigComponent", "getComponentName"}));
-        }
-        return tmp20;
+        return "AutoCodeConfig";
     }
 
     @Nullable
@@ -59,7 +57,7 @@ public class AutoCodeConfigComponent implements BaseComponent, Configurable, Per
     }
 
     @Override
-    public void apply() throws ConfigurationException {
+    public void apply() {
         if (this.form != null) {
             this.form.getData(this);
         }
@@ -144,7 +142,7 @@ public class AutoCodeConfigComponent implements BaseComponent, Configurable, Per
     }
 
     @Override
-    public void loadState(AutoCodeConfigComponent autoCodeConfigComponent) {
+    public void loadState(@NotNull AutoCodeConfigComponent autoCodeConfigComponent) {
         XmlSerializerUtil.copyBean(autoCodeConfigComponent, this);
     }
 }

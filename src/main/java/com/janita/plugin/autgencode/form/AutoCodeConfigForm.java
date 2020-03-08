@@ -1,33 +1,49 @@
 package com.janita.plugin.autgencode.form;
 
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
 import com.janita.plugin.autgencode.component.AutoCodeConfigComponent;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.io.File;
 
 /**
- * @author 李鹏军
+ * 自动代码生成
+ *
+ * 保存数据库相关配置都form
+ *
+ * @author zhucj
+ * @since 202003
  */
 public class AutoCodeConfigForm implements Configurable {
+
     private JPanel rootComponent;
+
     private JTextField databaseUrl;
+
     private JTextField databaseUser;
+
     private JLabel databaseUrlLabel;
+
     private JLabel databaseUserLabel;
+
     private JTextField databasePwd;
+
     private JTextField creator;
+
     private JLabel databasePwdLabel;
+
     private JLabel creatorLabel;
+
     private JTextField projectPath;
+
     private JButton projectPathSelBtn;
+
     private JLabel projectPathLabel;
 
     private JTextField email;
+
     private JLabel emailLabel;
 
     public AutoCodeConfigForm() {
@@ -38,16 +54,13 @@ public class AutoCodeConfigForm implements Configurable {
         this.creatorLabel.setLabelFor(this.creator);
         this.projectPathLabel.setLabelFor(this.projectPath);
         this.emailLabel.setLabelFor(this.email);
-        this.projectPathSelBtn.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setFileSelectionMode(1);
-                int i = fileChooser.showOpenDialog(AutoCodeConfigForm.this.rootComponent);
-                if (i == 0) {
-                    File file = fileChooser.getSelectedFile();
-                    AutoCodeConfigForm.this.projectPath.setText(file.getAbsolutePath());
-                }
+        this.projectPathSelBtn.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(1);
+            int i = fileChooser.showOpenDialog(AutoCodeConfigForm.this.rootComponent);
+            if (i == 0) {
+                File file = fileChooser.getSelectedFile();
+                AutoCodeConfigForm.this.projectPath.setText(file.getAbsolutePath());
             }
         });
     }
@@ -105,8 +118,7 @@ public class AutoCodeConfigForm implements Configurable {
     }
 
     @Override
-    public void apply() throws ConfigurationException {
-
+    public void apply() {
         com.intellij.openapi.application.Application application = com.intellij.openapi.application.ApplicationManager.getApplication();
         AutoCodeConfigComponent config = application.getComponent(AutoCodeConfigComponent.class);
         getData(config);
