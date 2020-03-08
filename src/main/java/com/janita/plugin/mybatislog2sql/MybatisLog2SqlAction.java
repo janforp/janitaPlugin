@@ -27,6 +27,7 @@ import java.awt.datatransfer.StringSelection;
  * student
  * where
  * id = '1'
+ * and name = '张三'
  *
  * @author zhucj
  * @since 202003
