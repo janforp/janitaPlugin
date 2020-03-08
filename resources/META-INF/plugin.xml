@@ -40,6 +40,7 @@
                 description="TestTranslateAction">
             <add-to-group group-id="CodeMenu" anchor="after" relative-to-action="Generate"/>
         </action>
+        <action id="ReplaceChineseCharAction" class="com.janita.plugin.replace.ReplaceChineseCharAction" text="ReplaceChineseCharAction" description="ReplaceChineseCharAction"/>
     </actions>
 
 </idea-plugin>

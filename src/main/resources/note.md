@@ -1,0 +1,3 @@
+一：在设置中添加自己的东西
+1.实现Configurable（或SearchableConfigurable）,实现里面的一个createComponent方法，返回一个JComponent面板对象,这样就会显示在Settings里。
+2.isModified方法用来判断是否已经修改，apply在配置文件应用的时候会调用，reset在撤回reset会调用
