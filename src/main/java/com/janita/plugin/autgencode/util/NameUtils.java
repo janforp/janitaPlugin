@@ -55,7 +55,7 @@ public class NameUtils {
     /**
      * 获取文件名
      */
-    public static String getFileName(String template, String className, String packageName, String tablePrefix) {
+    public static String getAllPathFileName(String template, String className, String packageName, String tablePrefix) {
         String packagePath = "main" + File.separator + "java" + File.separator;
         if (StringUtils.isNotBlank(packageName)) {
             packagePath += packageName.replace(".", File.separator) + File.separator;

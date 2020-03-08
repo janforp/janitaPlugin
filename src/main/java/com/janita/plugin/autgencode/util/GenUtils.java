@@ -29,12 +29,7 @@ import java.util.zip.ZipOutputStream;
 @SuppressWarnings("all")
 public class GenUtils {
 
-    /**
-     * 生成代码
-     */
-    public static void generatorCode(Map<String, String> table, List<Map<String, String>> columns, ZipOutputStream zip) {
-        com.intellij.openapi.application.Application application = com.intellij.openapi.application.ApplicationManager.getApplication();
-        AutoCodeConfigComponent applicationComponent = application.getComponent(AutoCodeConfigComponent.class);
+    private static GenTemp buildTableEntity(Map<String, String> table, List<Map<String, String>> columns) {
         //配置信息
         Map<String, String> jdbcTypeAndJavaTypeMap = NameUtils.getJdbcTypeAndJavaTypeMap();
         //表信息
@@ -59,33 +54,44 @@ public class GenUtils {
             columnEntity.setDataType(column.get("dataType"));
             columnEntity.setComments(column.get("columnComment"));
             columnEntity.setExtra(column.get("extra"));
-
             //列名转换成Java属性名
             String attrName = NameUtils.columnToJava(columnEntity.getColumnName());
             columnEntity.setAttrName(attrName);
             columnEntity.setAttrname(StringUtils.uncapitalize(attrName));
-
             //列的数据类型，转换成Java类型
             String attrType = jdbcTypeAndJavaTypeMap.getOrDefault(columnEntity.getDataType().split("\\(")[0], "unknowType");
-
             columnEntity.setAttrType(attrType);
-
             if ("Date".equals(attrType)) {
                 hasDate = true;
             }
             if ("BigDecimal".equals(attrType)) {
                 hasBigDecimal = true;
             }
-
             //是否主键
             if (("PRI".equalsIgnoreCase(column.get("columnKey")) && tableEntity.getPk() == null)) {
                 tableEntity.setPk(columnEntity);
             }
-
             columnList.add(columnEntity);
         }
         tableEntity.setColumns(columnList);
 
+        GenTemp temp = new GenTemp();
+        temp.setTableEntity(tableEntity);
+        temp.setHasBigDecimal(hasBigDecimal);
+        temp.setHasDate(hasDate);
+        temp.setPre(pre);
+        return temp;
+    }
+
+    /**
+     * 生成代码
+     */
+    public static void generatorCode(Map<String, String> table, List<Map<String, String>> columns, ZipOutputStream zipOutputStream) {
+        final String packageName = "com.platform";
+        //配置信息
+        GenTemp genTemp = buildTableEntity(table, columns);
+        TableEntity tableEntity = genTemp.getTableEntity();
+        String pre = genTemp.getPre();
         //若没主键
         if (tableEntity.getPk() == null) {
             //设置columnName为id的为主键
@@ -102,15 +108,12 @@ public class GenUtils {
                 tableEntity.setPk(tableEntity.getColumns().get(0));
             }
         }
-
         //初始化参数
         Properties properties = new Properties();
-
         try {
             //安装插件后 从jar文件中加载模板文件
             //设置jar包所在的位置
             String sysRoot = GenUtils.class.getResource("").getPath().split("!/com/platform")[0];
-
             //设置velocity资源加载方式为jar
             properties.setProperty("resource.loader", "jar");
             //设置velocity资源加载方式为jar时的处理类
@@ -119,14 +122,42 @@ public class GenUtils {
         } catch (Exception e) {
             // 从类路径加载模板文件
             String filePath = GenUtils.class.getResource("/").getPath();
-
             properties.setProperty("file.resource.loader.path", filePath);
         }
         properties.put("input.encoding", "UTF-8");
         properties.put("output.encoding", "UTF-8");
         properties.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.NullLogChute");
         Velocity.init(properties);
+        Map<String, Object> map = buildMap(genTemp, packageName);
+        VelocityContext context = new VelocityContext(map);
+        //获取模板列表
+        List<String> templates = NameUtils.getTemplates();
+        for (String template : templates) {
+            //渲染模板
+            StringWriter stringWriter = new StringWriter();
+            Template tpl = Velocity.getTemplate(template, "UTF-8");
+            tpl.merge(context, stringWriter);
+            try {
+                //添加到zip
+                String fileName = NameUtils.getAllPathFileName(template, tableEntity.getClassName(), packageName, pre);
+                fileName = (fileName == null ? "" : fileName);
+                zipOutputStream.putNextEntry(new ZipEntry(fileName));
+                IOUtils.write(stringWriter.toString(), zipOutputStream, "UTF-8");
+                stringWriter.close();
+                zipOutputStream.closeEntry();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
+    private static Map<String, Object> buildMap(GenTemp temp, String packageName) {
+        com.intellij.openapi.application.Application application = com.intellij.openapi.application.ApplicationManager.getApplication();
+        AutoCodeConfigComponent applicationComponent = application.getComponent(AutoCodeConfigComponent.class);
+        String pre = temp.getPre();
+        TableEntity tableEntity = temp.getTableEntity();
+        boolean hasBigDecimal = temp.isHasBigDecimal();
+        boolean hasDate = temp.isHasDate();
         //封装模板数据
         Map<String, Object> map = new HashMap<>(32);
         map.put("tableName", tableEntity.getTableName());
@@ -136,35 +167,13 @@ public class GenUtils {
         map.put("classname", tableEntity.getClassname());
         map.put("pathName", tableEntity.getClassname().toLowerCase());
         map.put("columns", tableEntity.getColumns());
-        map.put("package", "com.platform");
+        map.put("package", packageName);
         map.put("author", applicationComponent.getCreator());
         map.put("datetime", DateUtils.format(new Date(), DateUtils.DATE_TIME_PATTERN));
         map.put("hasDate", hasDate);
         map.put("hasBigDecimal", hasBigDecimal);
         map.put("pre", pre);
-
-        VelocityContext context = new VelocityContext(map);
-
-        //获取模板列表
-        List<String> templates = NameUtils.getTemplates();
-        for (String template : templates) {
-            //渲染模板
-            StringWriter sw = new StringWriter();
-            Template tpl = Velocity.getTemplate(template, "UTF-8");
-            tpl.merge(context, sw);
-
-            try {
-                //添加到zip
-                String fileName = NameUtils.getFileName(template, tableEntity.getClassName(), "com.platform", pre);
-                fileName = (fileName == null ? "" : fileName);
-                zip.putNextEntry(new ZipEntry(fileName));
-                IOUtils.write(sw.toString(), zip, "UTF-8");
-                sw.close();
-                zip.closeEntry();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        return map;
     }
 
     public static void main(String[] args) throws Exception {
