@@ -27,36 +27,36 @@ public class AutoCodeConfigForm implements Configurable {
     /**
      * 数据库输入框标题
      */
-    private JLabel databaseUrlLabel;
+    private JLabel databaseUrlTitle;
 
     /**
      * 数据库输入框
      */
-    private JTextField databaseUrl;
+    private JTextField databaseUrlInput;
 
     /****数据库地址****************************************************************************************/
 
     /**
      * 用户名输入框标题
      */
-    private JLabel databaseUserLabel;
+    private JLabel databaseUserTitle;
 
     /**
      * 用户名输入框
      */
-    private JTextField databaseUser;
+    private JTextField databaseUserInput;
 
     /****用户名****************************************************************************************/
 
-    private JLabel databasePwdLabel;
+    private JLabel databasePwdTitle;
 
-    private JTextField databasePwd;
+    private JTextField databasePwdInput;
 
     /****密码****************************************************************************************/
 
-    private JLabel projectPathLabel;
+    private JLabel projectPathTitle;
 
-    private JTextField projectPath;
+    private JTextField projectPathInput;
 
     /**
      * 选择路径的按钮
@@ -65,33 +65,33 @@ public class AutoCodeConfigForm implements Configurable {
 
     /****生成路径****************************************************************************************/
 
-    private JTextField creator;
+    private JLabel creatorTitle;
 
-    private JLabel creatorLabel;
+    private JTextField creatorInput;
 
     /****创建人****************************************************************************************/
 
-    private JTextField email;
+    private JLabel emailTitle;
 
-    private JLabel emailLabel;
+    private JTextField emailInput;
 
     /****邮箱****************************************************************************************/
 
     public AutoCodeConfigForm() {
         super();
-        this.databaseUrlLabel.setLabelFor(this.databaseUrl);
-        this.databaseUserLabel.setLabelFor(this.databaseUser);
-        this.databasePwdLabel.setLabelFor(this.databasePwd);
-        this.creatorLabel.setLabelFor(this.creator);
-        this.projectPathLabel.setLabelFor(this.projectPath);
-        this.emailLabel.setLabelFor(this.email);
+        this.databaseUrlTitle.setLabelFor(this.databaseUrlInput);
+        this.databaseUserTitle.setLabelFor(this.databaseUserInput);
+        this.databasePwdTitle.setLabelFor(this.databasePwdInput);
+        this.creatorTitle.setLabelFor(this.creatorInput);
+        this.projectPathTitle.setLabelFor(this.projectPathInput);
+        this.emailTitle.setLabelFor(this.emailInput);
         this.projectPathSelBtn.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setFileSelectionMode(1);
             int i = fileChooser.showOpenDialog(AutoCodeConfigForm.this.rootComponent);
             if (i == 0) {
                 File file = fileChooser.getSelectedFile();
-                AutoCodeConfigForm.this.projectPath.setText(file.getAbsolutePath());
+                AutoCodeConfigForm.this.projectPathInput.setText(file.getAbsolutePath());
             }
         });
     }
@@ -101,30 +101,30 @@ public class AutoCodeConfigForm implements Configurable {
     }
 
     public void setData(AutoCodeConfigComponent data) {
-        this.databaseUrl.setText(data.getDatabaseUrl());
-        this.databaseUser.setText(data.getDatabaseUser());
-        this.databasePwd.setText(data.getDatabasePwd());
-        this.creator.setText(data.getCreator());
-        this.projectPath.setText(data.getProjectPath());
-        this.email.setText(data.getEmail());
+        this.databaseUrlInput.setText(data.getDatabaseUrl());
+        this.databaseUserInput.setText(data.getDatabaseUser());
+        this.databasePwdInput.setText(data.getDatabasePwd());
+        this.creatorInput.setText(data.getCreator());
+        this.projectPathInput.setText(data.getProjectPath());
+        this.emailInput.setText(data.getEmail());
     }
 
     public void getData(AutoCodeConfigComponent data) {
-        data.setDatabaseUrl(this.databaseUrl.getText().trim());
-        data.setDatabaseUser(this.databaseUser.getText().trim());
-        data.setDatabasePwd(this.databasePwd.getText().trim());
-        data.setCreator(this.creator.getText().trim());
-        data.setProjectPath(this.projectPath.getText().trim());
-        data.setEmail(this.email.getText().trim());
+        data.setDatabaseUrl(this.databaseUrlInput.getText().trim());
+        data.setDatabaseUser(this.databaseUserInput.getText().trim());
+        data.setDatabasePwd(this.databasePwdInput.getText().trim());
+        data.setCreator(this.creatorInput.getText().trim());
+        data.setProjectPath(this.projectPathInput.getText().trim());
+        data.setEmail(this.emailInput.getText().trim());
     }
 
     public boolean isModified(AutoCodeConfigComponent data) {
-        boolean isModiT1 = (this.databaseUrl.getText() != null) && (!this.databaseUrl.getText().equals(data.getDatabaseUrl()));
-        boolean isModiT2 = (this.databaseUser.getText() != null) && (!this.databaseUser.getText().equals(data.getDatabaseUser()));
-        boolean isModiT3 = (this.databasePwd.getText() != null) && (!this.databasePwd.getText().equals(data.getDatabasePwd()));
-        boolean isModiT4 = (this.creator.getText() != null) && (!this.creator.getText().equals(data.getCreator()));
-        boolean isModiT5 = (this.projectPath.getText() != null) && (!this.projectPath.getText().equals(data.getProjectPath()));
-        boolean isModiT6 = (this.email.getText() != null) && (!this.email.getText().equals(data.getEmail()));
+        boolean isModiT1 = (this.databaseUrlInput.getText() != null) && (!this.databaseUrlInput.getText().equals(data.getDatabaseUrl()));
+        boolean isModiT2 = (this.databaseUserInput.getText() != null) && (!this.databaseUserInput.getText().equals(data.getDatabaseUser()));
+        boolean isModiT3 = (this.databasePwdInput.getText() != null) && (!this.databasePwdInput.getText().equals(data.getDatabasePwd()));
+        boolean isModiT4 = (this.creatorInput.getText() != null) && (!this.creatorInput.getText().equals(data.getCreator()));
+        boolean isModiT5 = (this.projectPathInput.getText() != null) && (!this.projectPathInput.getText().equals(data.getProjectPath()));
+        boolean isModiT6 = (this.emailInput.getText() != null) && (!this.emailInput.getText().equals(data.getEmail()));
         return (isModiT1) || (isModiT2) || (isModiT3) || (isModiT4) || (isModiT5) || (isModiT6);
     }
 

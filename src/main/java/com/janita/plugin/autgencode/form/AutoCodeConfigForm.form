@@ -16,7 +16,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="dd42f" class="javax.swing.JLabel" binding="databaseUrlLabel">
+          <component id="dd42f" class="javax.swing.JLabel" binding="databaseUrlTitle">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -24,7 +24,7 @@
               <text value="数 据 库： "/>
             </properties>
           </component>
-          <component id="9d7d0" class="javax.swing.JTextField" binding="databaseUrl">
+          <component id="9d7d0" class="javax.swing.JTextField" binding="databaseUrlInput">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -44,7 +44,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="79cd8" class="javax.swing.JLabel" binding="databasePwdLabel">
+          <component id="79cd8" class="javax.swing.JLabel" binding="databasePwdTitle">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -52,7 +52,7 @@
               <text value="密     码： "/>
             </properties>
           </component>
-          <component id="1b90" class="javax.swing.JTextField" binding="databasePwd">
+          <component id="1b90" class="javax.swing.JTextField" binding="databasePwdInput">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -72,7 +72,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="42de2" class="javax.swing.JLabel" binding="databaseUserLabel">
+          <component id="42de2" class="javax.swing.JLabel" binding="databaseUserTitle">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -80,7 +80,7 @@
               <text value="用 户 名： "/>
             </properties>
           </component>
-          <component id="b9303" class="javax.swing.JTextField" binding="databaseUser">
+          <component id="b9303" class="javax.swing.JTextField" binding="databaseUserInput">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -100,7 +100,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="7b6a2" class="javax.swing.JLabel" binding="creatorLabel">
+          <component id="7b6a2" class="javax.swing.JLabel" binding="creatorTitle">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -108,7 +108,7 @@
               <text value="创 建 人： "/>
             </properties>
           </component>
-          <component id="2a5d9" class="javax.swing.JTextField" binding="creator">
+          <component id="2a5d9" class="javax.swing.JTextField" binding="creatorInput">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -128,7 +128,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="8952b" class="javax.swing.JLabel" binding="projectPathLabel">
+          <component id="8952b" class="javax.swing.JLabel" binding="projectPathTitle">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -136,7 +136,7 @@
               <text value="生成路径："/>
             </properties>
           </component>
-          <component id="e2ccf" class="javax.swing.JTextField" binding="projectPath">
+          <component id="e2ccf" class="javax.swing.JTextField" binding="projectPathInput">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -164,7 +164,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="39b8d" class="javax.swing.JLabel" binding="emailLabel">
+          <component id="39b8d" class="javax.swing.JLabel" binding="emailTitle">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -172,7 +172,7 @@
               <text value="邮      箱："/>
             </properties>
           </component>
-          <component id="32bed" class="javax.swing.JTextField" binding="email">
+          <component id="32bed" class="javax.swing.JTextField" binding="emailInput">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
