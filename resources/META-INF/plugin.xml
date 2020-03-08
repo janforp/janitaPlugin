@@ -51,7 +51,6 @@
                 text="ToggleCamelCase"
                 description="ToggleCamelCase">
             <add-to-group group-id="EditSmartGroup" anchor="after" relative-to-action="EditorToggleCase"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="K L"/>
         </action>
     </actions>
 
