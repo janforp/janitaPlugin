@@ -16,35 +16,66 @@ import java.io.File;
  * @author zhucj
  * @since 202003
  */
+@SuppressWarnings("all")
 public class AutoCodeConfigForm implements Configurable {
 
+    /**
+     * 主面板如：DIV
+     */
     private JPanel rootComponent;
 
-    private JTextField databaseUrl;
-
-    private JTextField databaseUser;
-
+    /**
+     * 数据库输入框标题
+     */
     private JLabel databaseUrlLabel;
 
+    /**
+     * 数据库输入框
+     */
+    private JTextField databaseUrl;
+
+    /****数据库地址****************************************************************************************/
+
+    /**
+     * 用户名输入框标题
+     */
     private JLabel databaseUserLabel;
 
-    private JTextField databasePwd;
+    /**
+     * 用户名输入框
+     */
+    private JTextField databaseUser;
 
-    private JTextField creator;
+    /****用户名****************************************************************************************/
 
     private JLabel databasePwdLabel;
 
-    private JLabel creatorLabel;
+    private JTextField databasePwd;
+
+    /****密码****************************************************************************************/
+
+    private JLabel projectPathLabel;
 
     private JTextField projectPath;
 
+    /**
+     * 选择路径的按钮
+     */
     private JButton projectPathSelBtn;
 
-    private JLabel projectPathLabel;
+    /****生成路径****************************************************************************************/
+
+    private JTextField creator;
+
+    private JLabel creatorLabel;
+
+    /****创建人****************************************************************************************/
 
     private JTextField email;
 
     private JLabel emailLabel;
+
+    /****邮箱****************************************************************************************/
 
     public AutoCodeConfigForm() {
         super();
