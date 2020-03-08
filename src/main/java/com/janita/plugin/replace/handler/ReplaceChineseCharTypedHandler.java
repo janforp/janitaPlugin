@@ -28,12 +28,22 @@ public class ReplaceChineseCharTypedHandler implements TypedActionHandler {
      */
     private static Map<String, String> cachedReplaceCharMap = new HashMap<>();
 
+    /**
+     * 处理器
+     */
     private TypedActionHandler typedActionHandler;
 
+    /**
+     * 最终输入
+     */
     private char lastChar = ' ';
 
     public ReplaceChineseCharTypedHandler(TypedActionHandler typedActionHandler) {
         this.typedActionHandler = typedActionHandler;
+    }
+
+    static {
+        reloadReplaceCharMap();
     }
 
     public static void reloadReplaceCharMap() {
@@ -41,9 +51,10 @@ public class ReplaceChineseCharTypedHandler implements TypedActionHandler {
         PropertiesComponent propertiesComponent = PropertiesComponent.getInstance();
         String cachedValue = propertiesComponent.getValue(ReplaceChineseCharConstants.CACHE_KEY, ReplaceChineseCharConstants.DEFAULT_CACHE_VALUE);
         String[] cacheValueArr = cachedValue.split(ReplaceChineseCharConstants.SEP_CHAR);
-        for (int i = 0; i < cacheValueArr.length / 2; i++) {
-            String key = cacheValueArr[2 * i].trim();
-            String value = cacheValueArr[2 * i + 1].trim();
+        final int doubleV = 2;
+        for (int i = 0; i < cacheValueArr.length / doubleV; i++) {
+            String key = cacheValueArr[doubleV * i].trim();
+            String value = cacheValueArr[doubleV * i + 1].trim();
             cachedReplaceCharMap.put(key, value);
         }
     }
