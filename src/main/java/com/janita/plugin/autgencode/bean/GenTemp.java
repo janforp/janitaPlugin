@@ -1,6 +1,4 @@
-package com.janita.plugin.autgencode.util;
-
-import com.janita.plugin.autgencode.bean.TableEntity;
+package com.janita.plugin.autgencode.bean;
 
 /**
  * 类说明：生成表对象的时候的一个临时对象，用来保存有效字段

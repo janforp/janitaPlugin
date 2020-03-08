@@ -1,6 +1,7 @@
 package com.janita.plugin.autgencode.util;
 
 import com.janita.plugin.autgencode.bean.ColumnEntity;
+import com.janita.plugin.autgencode.bean.GenTemp;
 import com.janita.plugin.autgencode.bean.TableEntity;
 import com.janita.plugin.autgencode.component.AutoCodeConfigComponent;
 import org.apache.commons.io.IOUtils;
