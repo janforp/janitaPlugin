@@ -23,7 +23,6 @@ import java.util.zip.ZipOutputStream;
  * @author zhucj
  * @since 202003
  */
-@SuppressWarnings("all")
 public class GenUtils {
 
     /**

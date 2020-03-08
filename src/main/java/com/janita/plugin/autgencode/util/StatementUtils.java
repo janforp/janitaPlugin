@@ -17,13 +17,32 @@ import java.util.Map;
  */
 public class StatementUtils {
 
-    public static Map<String, String> findTableDescription(Connection conn, String tableName)
+    /**
+     * 查询表名称，表注释
+     */
+    private static final String SELECT_TABLE_NAME_COMMENT
+            = "SELECT TABLE_NAME,table_comment COMMENT "
+            + "FROM information_schema.tables "
+            + "WHERE TABLE_NAME = ?";
+
+    /**
+     * 查询列信息
+     */
+    private static final String SELECT_COLUMN_INFO
+            = "SELECT column_name columnName, data_type dataType, column_comment columnComment, column_key columnKey, extra "
+            + "FROM information_schema.columns "
+            + "WHERE table_name = '" + "%s" + "' "
+            + "AND table_schema = (select database()) "
+            + "ORDER BY ordinal_position";
+
+    public static Map<String, String> getTableDescription(Connection conn, String tableName)
             throws Exception {
         PreparedStatement ps = null;
         ResultSet rs = null;
         Map<String, String> map = new HashMap<>(4);
         try {
-            ps = conn.prepareStatement("SELECT TABLE_NAME,table_comment COMMENT FROM information_schema.tables WHERE TABLE_NAME=?");
+            String sql = String.format(SELECT_TABLE_NAME_COMMENT, tableName);
+            ps = conn.prepareStatement(sql);
             ps.setString(1, tableName);
             rs = ps.executeQuery();
             if (rs.next()) {
@@ -45,13 +64,12 @@ public class StatementUtils {
         }
     }
 
-    public static List<Map<String, String>> findTableColumns(Connection conn, String tableName)
+    public static List<Map<String, String>> queryTableColumnList(Connection conn, String tableName)
             throws Exception {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            String sql = "select column_name columnName, data_type dataType, column_comment columnComment, column_key columnKey, extra from information_schema.columns" +
-                    " where table_name = '" + tableName + "' and table_schema = (select database()) order by ordinal_position";
+            String sql = String.format(SELECT_COLUMN_INFO, tableName);
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             List<Map<String, String>> columns = new ArrayList<>();

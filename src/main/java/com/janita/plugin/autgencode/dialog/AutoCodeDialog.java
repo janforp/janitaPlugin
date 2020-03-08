@@ -112,13 +112,13 @@ public class AutoCodeDialog extends JDialog {
             for (String tableName : tableNames) {
                 Connection connection = dbUtil.getConnection();
                 //查询表信息
-                Map<String, String> tableNameCommentMap = StatementUtils.findTableDescription(connection, tableName);
+                Map<String, String> tableNameCommentMap = StatementUtils.getTableDescription(connection, tableName);
                 if (tableNameCommentMap.size() == 0) {
                     JOptionPane.showMessageDialog(this, "代码生成错误！" + tableName + "表不存在！");
                     return false;
                 }
                 //查询列信息
-                List<Map<String, String>> columnMap = StatementUtils.findTableColumns(connection, tableName);
+                List<Map<String, String>> columnMap = StatementUtils.queryTableColumnList(connection, tableName);
                 //生成代码
                 GenUtils.generatorCode(tableNameCommentMap, columnMap, zipOutputStream);
             }
