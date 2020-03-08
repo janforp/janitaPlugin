@@ -51,6 +51,7 @@ public class ReplaceChineseCharSetReCacheConfigurable implements SearchableConfi
     @Nullable
     @Override
     public JComponent createComponent() {
+        System.out.println("com.janita.plugin.replace.configurable.ReplaceChineseCharSetReCacheConfigurable.createComponent");
         if (settingPanel != null) {
             settingPanel.repaint();
             return settingPanel;
@@ -124,13 +125,14 @@ public class ReplaceChineseCharSetReCacheConfigurable implements SearchableConfi
 
     @Override
     public boolean isModified() {
+        System.out.println("com.janita.plugin.replace.configurable.ReplaceChineseCharSetReCacheConfigurable.isModified");
         String oldValue = CacheUtils.getCacheValue().trim();
         String newValue = getConfigString().trim();
-        boolean updated = StringUtils.equals(oldValue, newValue);
-        if (updated) {
+        boolean modified = !StringUtils.equals(oldValue, newValue);
+        if (modified) {
             System.out.println("用户进行了猛如虎的修改");
         }
-        return updated;
+        return modified;
     }
 
     /**
@@ -155,6 +157,7 @@ public class ReplaceChineseCharSetReCacheConfigurable implements SearchableConfi
 
     @Override
     public void apply() {
+        System.out.println("com.janita.plugin.replace.configurable.ReplaceChineseCharSetReCacheConfigurable.apply");
         String updatedValue = getConfigString().trim();
         CacheUtils.setCacheValue(updatedValue);
         //重新加载处理器的缓存
@@ -163,6 +166,7 @@ public class ReplaceChineseCharSetReCacheConfigurable implements SearchableConfi
 
     @Override
     public void reset() {
+        System.out.println("com.janita.plugin.replace.configurable.ReplaceChineseCharSetReCacheConfigurable.reset");
         String settingStr = CacheUtils.getCacheValue();
         String[] settingArr = settingStr.split(ReplaceChineseCharConstants.SEP_CHAR);
         //每次打开面板的时候，重新渲染输入框的值

@@ -19,7 +19,7 @@
     -->
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- Add your extensions here -->
+        <applicationConfigurable instance="com.janita.plugin.replace.configurable.ReplaceChineseCharSetReCacheConfigurable"/>
     </extensions>
 
     <actions>
