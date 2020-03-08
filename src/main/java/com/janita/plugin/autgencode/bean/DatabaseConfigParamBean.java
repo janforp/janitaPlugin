@@ -6,7 +6,7 @@ package com.janita.plugin.autgencode.bean;
  * @author zhucj
  * @since 202003
  */
-public class ParamBean {
+public class DatabaseConfigParamBean {
 
     private String txtDatabaseUrl;
 

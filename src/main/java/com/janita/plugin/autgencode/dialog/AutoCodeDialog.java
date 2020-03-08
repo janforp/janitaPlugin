@@ -1,6 +1,6 @@
 package com.janita.plugin.autgencode.dialog;
 
-import com.janita.plugin.autgencode.bean.ParamBean;
+import com.janita.plugin.autgencode.bean.DatabaseConfigParamBean;
 import com.janita.plugin.autgencode.component.AutoCodeConfigComponent;
 import com.janita.plugin.autgencode.util.DatabaseUtil;
 import com.janita.plugin.autgencode.util.DateUtils;
@@ -54,7 +54,7 @@ public class AutoCodeDialog extends JDialog {
     }
 
     private void onOk() {
-        ParamBean bean = buildParam();
+        DatabaseConfigParamBean bean = buildDatabaseConfigParamBean();
         if (bean != null) {
             if (creatFile(bean)) {
                 JOptionPane.showMessageDialog(getContentPane(), "代码生成执行完毕！");
@@ -67,7 +67,7 @@ public class AutoCodeDialog extends JDialog {
         dispose();
     }
 
-    private ParamBean buildParam() {
+    private DatabaseConfigParamBean buildDatabaseConfigParamBean() {
         boolean booleanValue = paramCheck();
         if (!booleanValue) {
             return null;
@@ -76,7 +76,7 @@ public class AutoCodeDialog extends JDialog {
                 = com.intellij.openapi.application.ApplicationManager.getApplication();
         AutoCodeConfigComponent config = application.getComponent(AutoCodeConfigComponent.class);
 
-        ParamBean bean = new ParamBean();
+        DatabaseConfigParamBean bean = new DatabaseConfigParamBean();
         bean.setTxtDatabaseUrl(
                 "jdbc:mysql://" + config.getDatabaseUrl() + "?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf-8");
         bean.setTxtDatabaseUser(config.getDatabaseUser());
@@ -97,7 +97,7 @@ public class AutoCodeDialog extends JDialog {
         return checkResult;
     }
 
-    private boolean creatFile(ParamBean bean) {
+    private boolean creatFile(DatabaseConfigParamBean bean) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         com.intellij.openapi.application.Application application = com.intellij.openapi.application.ApplicationManager.getApplication();
         AutoCodeConfigComponent config = application.getComponent(AutoCodeConfigComponent.class);

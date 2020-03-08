@@ -1,6 +1,6 @@
 package com.janita.plugin.autgencode.util;
 
-import com.janita.plugin.autgencode.bean.ParamBean;
+import com.janita.plugin.autgencode.bean.DatabaseConfigParamBean;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,9 +23,9 @@ public class DatabaseUtil {
 
     private Connection conn;
 
-    private ParamBean bean;
+    private DatabaseConfigParamBean bean;
 
-    public DatabaseUtil(ParamBean bean) {
+    public DatabaseUtil(DatabaseConfigParamBean bean) {
 
         this.bean = bean;
     }
