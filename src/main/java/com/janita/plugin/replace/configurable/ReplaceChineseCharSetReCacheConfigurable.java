@@ -20,31 +20,42 @@ import java.awt.event.MouseListener;
  * @author zhucj
  * @since 2020/3/8 - 下午12:35
  */
+@SuppressWarnings("all")
 public class ReplaceChineseCharSetReCacheConfigurable implements SearchableConfigurable {
 
-    private static final int LENGTH = 45;
+    private static final int MAX_CACHE_LENGTH = 45;
 
+    /**
+     * 主面板
+     */
     private JPanel settingPanel;
 
-    private JTextField[] text1;
+    /**
+     * 被替换输入框
+     */
+    private JTextField[] keyTextFields;
 
-    private JTextField[] text2;
+    /**
+     * 替换值输入框
+     */
+    private JTextField[] valueTextFields;
 
-    private JLabel[] labels1;
-
-    private JLabel[] labels2;
-
+    /**
+     * 默认按钮
+     */
     private JLabel btnDefault;
 
     @NotNull
     @Override
     public String getId() {
+        System.out.println("com.janita.plugin.replace.configurable.ReplaceChineseCharSetReCacheConfigurable.getId");
         return "ReplaceChineseChar";
     }
 
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
     public String getDisplayName() {
+        System.out.println("com.janita.plugin.replace.configurable.ReplaceChineseCharSetReCacheConfigurable.getDisplayName");
         return this.getId();
     }
 
@@ -58,29 +69,33 @@ public class ReplaceChineseCharSetReCacheConfigurable implements SearchableConfi
         }
         settingPanel = new JPanel();
         settingPanel.setLayout(null);
-        text1 = new JTextField[LENGTH];
-        text2 = new JTextField[LENGTH];
-        labels1 = new JLabel[LENGTH];
-        labels2 = new JLabel[LENGTH];
-        for (int i = 0; i < LENGTH; i++) {
-            text1[i] = new JTextField();
-            text2[i] = new JTextField();
-            labels1[i] = new JLabel();
-            labels2[i] = new JLabel();
-            text1[i].setBounds(35 + (i / 15) * 200, 32 * (i % 15), 60, 32);
-            text2[i].setBounds(120 + (i / 15) * 200, 32 * (i % 15), 60, 32);
-            labels1[i].setBounds(5 + (i / 15) * 200, 32 * (i % 15), 30, 32);
-            labels2[i].setBounds(95 + (i / 15) * 200, 32 * (i % 15), 25, 32);
-            labels1[i].setText((i + 1) + ".");
-            labels2[i].setText("->");
-            labels1[i].setHorizontalAlignment(JLabel.CENTER);
-            labels2[i].setHorizontalAlignment(JLabel.CENTER);
-            text1[i].setHorizontalAlignment(JLabel.CENTER);
-            text2[i].setHorizontalAlignment(JLabel.CENTER);
-            settingPanel.add(text1[i]);
-            settingPanel.add(text2[i]);
-            settingPanel.add(labels1[i]);
-            settingPanel.add(labels2[i]);
+        //被替换输入框
+        keyTextFields = new JTextField[MAX_CACHE_LENGTH];
+        //替换值输入框
+        valueTextFields = new JTextField[MAX_CACHE_LENGTH];
+        //下标
+        JLabel[] indexLabels = new JLabel[MAX_CACHE_LENGTH];
+        //箭头
+        JLabel[] arrowLabels = new JLabel[MAX_CACHE_LENGTH];
+        for (int i = 0; i < MAX_CACHE_LENGTH; i++) {
+            keyTextFields[i] = new JTextField();
+            valueTextFields[i] = new JTextField();
+            indexLabels[i] = new JLabel();
+            arrowLabels[i] = new JLabel();
+            keyTextFields[i].setBounds(35 + (i / 15) * 200, 32 * (i % 15), 60, 32);
+            valueTextFields[i].setBounds(120 + (i / 15) * 200, 32 * (i % 15), 60, 32);
+            indexLabels[i].setBounds(5 + (i / 15) * 200, 32 * (i % 15), 30, 32);
+            arrowLabels[i].setBounds(95 + (i / 15) * 200, 32 * (i % 15), 25, 32);
+            indexLabels[i].setText((i + 1) + ".");
+            arrowLabels[i].setText("->");
+            indexLabels[i].setHorizontalAlignment(JLabel.CENTER);
+            arrowLabels[i].setHorizontalAlignment(JLabel.CENTER);
+            keyTextFields[i].setHorizontalAlignment(JLabel.CENTER);
+            valueTextFields[i].setHorizontalAlignment(JLabel.CENTER);
+            settingPanel.add(keyTextFields[i]);
+            settingPanel.add(valueTextFields[i]);
+            settingPanel.add(indexLabels[i]);
+            settingPanel.add(arrowLabels[i]);
         }
         btnDefault = new JLabel();
         btnDefault.setText("恢复默认");
@@ -127,7 +142,7 @@ public class ReplaceChineseCharSetReCacheConfigurable implements SearchableConfi
     public boolean isModified() {
         System.out.println("com.janita.plugin.replace.configurable.ReplaceChineseCharSetReCacheConfigurable.isModified");
         String oldValue = CacheUtils.getCacheValue().trim();
-        String newValue = getConfigString().trim();
+        String newValue = getConfigStringFromTextFields().trim();
         boolean modified = !StringUtils.equals(oldValue, newValue);
         if (modified) {
             System.out.println("用户进行了猛如虎的修改");
@@ -140,12 +155,13 @@ public class ReplaceChineseCharSetReCacheConfigurable implements SearchableConfi
      *
      * @return 设置中的值
      */
-    private String getConfigString() {
+    private String getConfigStringFromTextFields() {
+        System.out.println("com.janita.plugin.replace.configurable.ReplaceChineseCharSetReCacheConfigurable.getConfigStringFromTextFields");
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < LENGTH; i++) {
-            JTextField jTextField1 = text1[i];
+        for (int i = 0; i < MAX_CACHE_LENGTH; i++) {
+            JTextField jTextField1 = keyTextFields[i];
             String leftValue = jTextField1.getText().trim();
-            JTextField jTextField2 = text2[i];
+            JTextField jTextField2 = valueTextFields[i];
             String rightValue = jTextField2.getText().trim();
             builder.append(leftValue)
                     .append(ReplaceChineseCharConstants.SEP_CHAR)
@@ -158,7 +174,7 @@ public class ReplaceChineseCharSetReCacheConfigurable implements SearchableConfi
     @Override
     public void apply() {
         System.out.println("com.janita.plugin.replace.configurable.ReplaceChineseCharSetReCacheConfigurable.apply");
-        String updatedValue = getConfigString().trim();
+        String updatedValue = getConfigStringFromTextFields().trim();
         CacheUtils.setCacheValue(updatedValue);
         //重新加载处理器的缓存
         ReplaceChineseCharTypedHandler.reloadReplaceCharMap();
@@ -170,12 +186,12 @@ public class ReplaceChineseCharSetReCacheConfigurable implements SearchableConfi
         String settingStr = CacheUtils.getCacheValue();
         String[] settingArr = settingStr.split(ReplaceChineseCharConstants.SEP_CHAR);
         //每次打开面板的时候，重新渲染输入框的值
-        for (int i = 0; i < LENGTH; i++) {
-            JTextField jTextField1 = text1[i];
+        for (int i = 0; i < MAX_CACHE_LENGTH; i++) {
+            JTextField jTextField1 = keyTextFields[i];
             String value1 = (2 * i) < settingArr.length ? settingArr[2 * i].trim() : "";
             jTextField1.setText(value1);
 
-            JTextField jTextField2 = text2[i];
+            JTextField jTextField2 = valueTextFields[i];
             String value2 = (2 * i + 1) < settingArr.length ? settingArr[2 * i + 1].trim() : "";
             jTextField2.setText(value2);
         }

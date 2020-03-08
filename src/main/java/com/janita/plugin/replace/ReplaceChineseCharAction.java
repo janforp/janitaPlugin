@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 public class ReplaceChineseCharAction extends AnAction {
 
     static {
+        System.out.println("ReplaceChineseCharAction静态代码块");
         final EditorActionManager editorActionManager = EditorActionManager.getInstance();
         final TypedAction typedAction = editorActionManager.getTypedAction();
         typedAction.setupHandler(new ReplaceChineseCharTypedHandler(typedAction.getHandler()));
@@ -23,6 +24,6 @@ public class ReplaceChineseCharAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-        //empty
+        System.out.println("com.janita.plugin.replace.ReplaceChineseCharAction.actionPerformed");
     }
 }

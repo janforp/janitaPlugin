@@ -40,14 +40,17 @@ public class ReplaceChineseCharTypedHandler implements TypedActionHandler {
     private char lastChar = ' ';
 
     public ReplaceChineseCharTypedHandler(TypedActionHandler typedActionHandler) {
+        System.out.println("com.janita.plugin.replace.handler.ReplaceChineseCharTypedHandler.ReplaceChineseCharTypedHandler构造器");
         this.typedActionHandler = typedActionHandler;
     }
 
     static {
+        System.out.println("ReplaceChineseCharTypedHandler静态代码块");
         reloadReplaceCharMap();
     }
 
     public static void reloadReplaceCharMap() {
+        System.out.println("com.janita.plugin.replace.handler.ReplaceChineseCharTypedHandler.reloadReplaceCharMap");
         cachedReplaceCharMap.clear();
         String cachedValue = CacheUtils.getCacheValue();
         String[] cacheValueArr = cachedValue.split(ReplaceChineseCharConstants.SEP_CHAR);
@@ -61,6 +64,7 @@ public class ReplaceChineseCharTypedHandler implements TypedActionHandler {
 
     @Override
     public void execute(@NotNull Editor editor, char inputChar, @NotNull DataContext dataContext) {
+        System.out.println("com.janita.plugin.replace.handler.ReplaceChineseCharTypedHandler.execute");
         Document document = editor.getDocument();
         Project project = editor.getProject();
         CaretModel caretModel = editor.getCaretModel();
