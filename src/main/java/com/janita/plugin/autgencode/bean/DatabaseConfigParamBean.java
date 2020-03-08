@@ -22,6 +22,8 @@ public class DatabaseConfigParamBean {
 
     private String txtEmail;
 
+    private String packageName;
+
     public String getTxtProjectPath() {
         return this.txtProjectPath;
     }
@@ -88,6 +90,14 @@ public class DatabaseConfigParamBean {
         this.txtEmail = txtEmail;
     }
 
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
     @Override
     public String toString() {
 
@@ -97,6 +107,8 @@ public class DatabaseConfigParamBean {
                 + "txtProjectPath:" + this.txtProjectPath + "\n"
                 + "txtTableName:" + this.txtTableName + "\n"
                 + "txtCreator:" + this.txtCreator + "\n"
-                + "txtEmail:" + this.txtEmail + "\n";
+                + "txtEmail:" + this.txtEmail + "\n"
+                + "packageName:" + this.packageName + "\n";
+
     }
 }

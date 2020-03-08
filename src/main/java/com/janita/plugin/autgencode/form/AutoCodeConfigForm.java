@@ -77,6 +77,12 @@ public class AutoCodeConfigForm implements Configurable {
 
     /****邮箱****************************************************************************************/
 
+    private JLabel packageNameTitle;
+
+    private JTextField packageNameInput;
+
+    /****包名称****************************************************************************************/
+
     public AutoCodeConfigForm() {
         super();
         this.databaseUrlTitle.setLabelFor(this.databaseUrlInput);
@@ -85,6 +91,7 @@ public class AutoCodeConfigForm implements Configurable {
         this.creatorTitle.setLabelFor(this.creatorInput);
         this.projectPathTitle.setLabelFor(this.projectPathInput);
         this.emailTitle.setLabelFor(this.emailInput);
+        this.packageNameTitle.setLabelFor(this.packageNameInput);
         this.projectPathSelBtn.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setFileSelectionMode(1);
@@ -107,6 +114,7 @@ public class AutoCodeConfigForm implements Configurable {
         this.creatorInput.setText(data.getCreator());
         this.projectPathInput.setText(data.getProjectPath());
         this.emailInput.setText(data.getEmail());
+        this.packageNameInput.setText(data.getPackageName());
     }
 
     public void getData(AutoCodeConfigComponent data) {
@@ -116,6 +124,7 @@ public class AutoCodeConfigForm implements Configurable {
         data.setCreator(this.creatorInput.getText().trim());
         data.setProjectPath(this.projectPathInput.getText().trim());
         data.setEmail(this.emailInput.getText().trim());
+        data.setPackageName(this.packageNameInput.getText().trim());
     }
 
     public boolean isModified(AutoCodeConfigComponent data) {
@@ -125,7 +134,8 @@ public class AutoCodeConfigForm implements Configurable {
         boolean isModiT4 = (this.creatorInput.getText() != null) && (!this.creatorInput.getText().equals(data.getCreator()));
         boolean isModiT5 = (this.projectPathInput.getText() != null) && (!this.projectPathInput.getText().equals(data.getProjectPath()));
         boolean isModiT6 = (this.emailInput.getText() != null) && (!this.emailInput.getText().equals(data.getEmail()));
-        return (isModiT1) || (isModiT2) || (isModiT3) || (isModiT4) || (isModiT5) || (isModiT6);
+        boolean isModiT7 = (this.packageNameInput.getText() != null) && (!this.packageNameInput.getText().equals(data.getPackageName()));
+        return (isModiT1) || (isModiT2) || (isModiT3) || (isModiT4) || (isModiT5) || (isModiT6) || (isModiT7);
     }
 
     @Nls

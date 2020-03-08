@@ -34,6 +34,8 @@ public class AutoCodeConfigComponent implements BaseComponent, Configurable, Per
 
     private String email = "804979367@qq.com";
 
+    private String packageName = "com.janita.demo";
+
     private AutoCodeConfigForm form;
 
     @NotNull
@@ -133,6 +135,14 @@ public class AutoCodeConfigComponent implements BaseComponent, Configurable, Per
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
 
     @Nullable

@@ -87,7 +87,9 @@ public class GenUtils {
      * 生成代码
      */
     public static void generatorCode(Map<String, String> table, List<Map<String, String>> columns, ZipOutputStream zipOutputStream) {
-        final String packageName = "com.platform";
+        com.intellij.openapi.application.Application application = com.intellij.openapi.application.ApplicationManager.getApplication();
+        AutoCodeConfigComponent applicationComponent = application.getComponent(AutoCodeConfigComponent.class);
+        String packageName = applicationComponent.getPackageName();
         //配置信息
         GenTemp genTemp = buildTableEntity(table, columns);
         TableEntity tableEntity = genTemp.getTableEntity();
@@ -128,7 +130,7 @@ public class GenUtils {
         properties.put("output.encoding", "UTF-8");
         properties.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.NullLogChute");
         Velocity.init(properties);
-        Map<String, Object> map = buildMap(genTemp, packageName);
+        Map<String, Object> map = buildMap(genTemp);
         VelocityContext context = new VelocityContext(map);
         //获取模板列表
         List<String> templates = NameUtils.getTemplates();
@@ -151,13 +153,14 @@ public class GenUtils {
         }
     }
 
-    private static Map<String, Object> buildMap(GenTemp temp, String packageName) {
+    private static Map<String, Object> buildMap(GenTemp temp) {
         com.intellij.openapi.application.Application application = com.intellij.openapi.application.ApplicationManager.getApplication();
         AutoCodeConfigComponent applicationComponent = application.getComponent(AutoCodeConfigComponent.class);
         String pre = temp.getPre();
         TableEntity tableEntity = temp.getTableEntity();
         boolean hasBigDecimal = temp.isHasBigDecimal();
         boolean hasDate = temp.isHasDate();
+        String packageName = applicationComponent.getPackageName();
         //封装模板数据
         Map<String, Object> map = new HashMap<>(32);
         map.put("tableName", tableEntity.getTableName());

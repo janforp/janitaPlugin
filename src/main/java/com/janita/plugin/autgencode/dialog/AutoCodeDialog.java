@@ -123,7 +123,7 @@ public class AutoCodeDialog extends JDialog {
                 GenUtils.generatorCode(tableNameCommentMap, columnMap, zipOutputStream);
             }
             zipOutputStream.close();
-            FileOutputStream out = new FileOutputStream(config.getProjectPath() + "/" + DateUtils.format(new Date(), "yyyyMMddHHmmss") + ".zipOutputStream");
+            FileOutputStream out = new FileOutputStream(config.getProjectPath() + "/" + DateUtils.format(new Date(), "yyyyMMddHHmmss") + ".zip");
             IOUtils.write(outputStream.toByteArray(), out);
             return true;
         } catch (Exception e) {
