@@ -1,9 +1,9 @@
 package com.janita.plugin.replace.configurable;
 
-import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.janita.plugin.replace.constant.ReplaceChineseCharConstants;
 import com.janita.plugin.replace.handler.ReplaceChineseCharTypedHandler;
+import com.janita.plugin.replace.util.CacheUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -92,7 +92,8 @@ public class ReplaceChineseCharSetReCacheConfigurable implements SearchableConfi
             public void mouseClicked(MouseEvent e) {
                 int confirmDialogResponse = JOptionPane.showConfirmDialog(settingPanel, "确定恢复默认吗?", getId(), JOptionPane.YES_NO_OPTION);
                 if (confirmDialogResponse == 0) {
-                    setCacheValue(ReplaceChineseCharConstants.DEFAULT_CACHE_VALUE);
+                    CacheUtils.setCacheValue(ReplaceChineseCharConstants.DEFAULT_CACHE_VALUE);
+                    ReplaceChineseCharTypedHandler.reloadReplaceCharMap();
                     reset();
                 }
             }
@@ -121,16 +122,9 @@ public class ReplaceChineseCharSetReCacheConfigurable implements SearchableConfi
         return settingPanel;
     }
 
-    public static void setCacheValue(String value) {
-        PropertiesComponent propertiesComponent = PropertiesComponent.getInstance();
-        propertiesComponent.setValue(ReplaceChineseCharConstants.CACHE_KEY, value);
-        ReplaceChineseCharTypedHandler.reloadReplaceCharMap();
-    }
-
     @Override
     public boolean isModified() {
-        PropertiesComponent propertiesComponent = PropertiesComponent.getInstance();
-        String oldValue = propertiesComponent.getValue(ReplaceChineseCharConstants.CACHE_KEY, ReplaceChineseCharConstants.DEFAULT_CACHE_VALUE).trim();
+        String oldValue = CacheUtils.getCacheValue().trim();
         String newValue = getConfigString().trim();
         boolean updated = StringUtils.equals(oldValue, newValue);
         if (updated) {
@@ -162,16 +156,14 @@ public class ReplaceChineseCharSetReCacheConfigurable implements SearchableConfi
     @Override
     public void apply() {
         String updatedValue = getConfigString().trim();
-        PropertiesComponent propertiesComponent = PropertiesComponent.getInstance();
-        propertiesComponent.setValue(ReplaceChineseCharConstants.CACHE_KEY, updatedValue);
+        CacheUtils.setCacheValue(updatedValue);
         //重新加载处理器的缓存
         ReplaceChineseCharTypedHandler.reloadReplaceCharMap();
     }
 
     @Override
     public void reset() {
-        PropertiesComponent propertiesComponent = PropertiesComponent.getInstance();
-        String settingStr = propertiesComponent.getValue(ReplaceChineseCharConstants.CACHE_KEY, ReplaceChineseCharConstants.DEFAULT_CACHE_VALUE);
+        String settingStr = CacheUtils.getCacheValue();
         String[] settingArr = settingStr.split(ReplaceChineseCharConstants.SEP_CHAR);
         //每次打开面板的时候，重新渲染输入框的值
         for (int i = 0; i < LENGTH; i++) {

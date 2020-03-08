@@ -10,6 +10,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
 import com.intellij.openapi.project.Project;
 import com.janita.plugin.replace.constant.ReplaceChineseCharConstants;
+import com.janita.plugin.replace.util.CacheUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -48,8 +49,7 @@ public class ReplaceChineseCharTypedHandler implements TypedActionHandler {
 
     public static void reloadReplaceCharMap() {
         cachedReplaceCharMap.clear();
-        PropertiesComponent propertiesComponent = PropertiesComponent.getInstance();
-        String cachedValue = propertiesComponent.getValue(ReplaceChineseCharConstants.CACHE_KEY, ReplaceChineseCharConstants.DEFAULT_CACHE_VALUE);
+        String cachedValue = CacheUtils.getCacheValue();
         String[] cacheValueArr = cachedValue.split(ReplaceChineseCharConstants.SEP_CHAR);
         final int doubleV = 2;
         for (int i = 0; i < cacheValueArr.length / doubleV; i++) {
