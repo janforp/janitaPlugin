@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 类说明：
+ * 类说明：查询数据库
  *
  * @author zhucj
  * @since 2020/3/8 - 下午7:31
@@ -23,7 +23,7 @@ public class StatementUtils {
     private static final String SELECT_TABLE_NAME_COMMENT
             = "SELECT TABLE_NAME,table_comment COMMENT "
             + "FROM information_schema.tables "
-            + "WHERE TABLE_NAME = ?";
+            + "WHERE TABLE_NAME = '" + "%s" + "' ";
 
     /**
      * 查询列信息
@@ -35,16 +35,18 @@ public class StatementUtils {
             + "AND table_schema = (select database()) "
             + "ORDER BY ordinal_position";
 
-    public static Map<String, String> getTableDescription(Connection conn, String tableName)
-            throws Exception {
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
+    /**
+     * 表名称，表注释
+     *
+     * @param conn 数据库链接
+     * @param tableName 表名称
+     * @return 表名称，表注释
+     * @throws Exception 数据库异常
+     */
+    public static Map<String, String> getTableDescription(Connection conn, String tableName) throws Exception {
         Map<String, String> map = new HashMap<>(4);
-        try {
-            String sql = String.format(SELECT_TABLE_NAME_COMMENT, tableName);
-            preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1, tableName);
-            resultSet = preparedStatement.executeQuery();
+        String sql = String.format(SELECT_TABLE_NAME_COMMENT, tableName);
+        try (PreparedStatement preparedStatement = conn.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
             if (resultSet.next()) {
                 String tableNameFromDb = resultSet.getString("TABLE_NAME");
                 String comment = resultSet.getString("COMMENT");
@@ -52,41 +54,26 @@ public class StatementUtils {
                 map.put("tableComment", comment);
             }
             return map;
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            try {
-                preparedStatement.close();
-                resultSet.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 
-    public static List<Map<String, String>> queryTableColumnList(Connection conn, String tableName)
-            throws Exception {
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            String sql = String.format(SELECT_COLUMN_INFO, tableName);
-            preparedStatement = conn.prepareStatement(sql);
-            resultSet = preparedStatement.executeQuery();
+    /**
+     * 查询列信息
+     *
+     * @param conn 数据库链接
+     * @param tableName 表名称
+     * @return 查询列信息
+     * @throws Exception 数据库异常
+     */
+    public static List<Map<String, String>> queryTableColumnList(Connection conn, String tableName) throws Exception {
+        String sql = String.format(SELECT_COLUMN_INFO, tableName);
+        try (PreparedStatement preparedStatement = conn.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
             List<Map<String, String>> columnMapList = new ArrayList<>();
             while (resultSet.next()) {
                 Map<String, String> columnMap = buildOneColumnMap(resultSet);
                 columnMapList.add(columnMap);
             }
             return columnMapList;
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            try {
-                preparedStatement.close();
-                resultSet.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 
