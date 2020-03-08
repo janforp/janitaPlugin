@@ -20,7 +20,18 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationConfigurable instance="com.janita.plugin.replace.configurable.ReplaceChineseCharSetReCacheConfigurable"/>
+        <applicationConfigurable instance="com.janita.plugin.autgencode.form.AutoCodeConfigForm"/>
     </extensions>
+
+    <application-components>
+        <!-- add your application components here -->
+        <component>
+            <implementation-class>com.janita.plugin.autgencode.component.AutoCodeComponent</implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.janita.plugin.autgencode.component.AutoCodeConfigComponent</implementation-class>
+        </component>
+    </application-components>
 
     <actions>
         <!-- Add your actions here -->
@@ -56,6 +67,13 @@
                 class="com.janita.plugin.mybatislog2sql.MybatisLog2SqlAction"
                 text="MybatisLog2SqlAction"
                 description="MybatisLog2SqlAction">
+            <add-to-group group-id="CodeMenu" anchor="after" relative-to-action="Generate"/>
+        </action>
+
+        <action id="AutoCodeAction"
+                class="com.janita.plugin.autgencode.AutoCodeAction"
+                text="AutoCodeAction"
+                description="AutoCodeAction">
             <add-to-group group-id="CodeMenu" anchor="after" relative-to-action="Generate"/>
         </action>
     </actions>
