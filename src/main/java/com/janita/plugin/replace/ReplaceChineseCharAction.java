@@ -17,7 +17,7 @@ public class ReplaceChineseCharAction extends AnAction {
 
     static {
         final EditorActionManager editorActionManager = EditorActionManager.getInstance();
-        TypedAction typedAction = editorActionManager.getTypedAction();
+        final TypedAction typedAction = editorActionManager.getTypedAction();
         typedAction.setupHandler(new ReplaceChineseCharTypedHandler(typedAction.getHandler()));
     }
 

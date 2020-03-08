@@ -1,7 +1,7 @@
 package com.janita.plugin.replace.constant;
 
 /**
- * 类说明：
+ * 类说明：ReplaceChineseChar
  *
  * @author zhucj
  * @since 2020/3/8 - 下午12:07
