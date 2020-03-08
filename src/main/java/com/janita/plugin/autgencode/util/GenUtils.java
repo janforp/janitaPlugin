@@ -58,7 +58,7 @@ public class GenUtils {
         try {
             //安装插件后 从jar文件中加载模板文件
             //设置jar包所在的位置
-            String sysRoot = GenUtils.class.getResource("").getPath().split("!/com/platform")[0];
+            String sysRoot = GenUtils.class.getResource("").getPath().split("!/com/janita")[0];
             //设置velocity资源加载方式为jar
             properties.setProperty("resource.loader", "jar");
             //设置velocity资源加载方式为jar时的处理类
