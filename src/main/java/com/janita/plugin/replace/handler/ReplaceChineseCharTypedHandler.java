@@ -1,6 +1,5 @@
 package com.janita.plugin.replace.handler;
 
-import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Caret;
@@ -63,14 +62,14 @@ public class ReplaceChineseCharTypedHandler implements TypedActionHandler {
     }
 
     @Override
-    public void execute(@NotNull Editor editor, char inputChar, @NotNull DataContext dataContext) {
+    public void execute(@NotNull Editor editor, char originInputChar, @NotNull DataContext dataContext) {
         System.out.println("com.janita.plugin.replace.handler.ReplaceChineseCharTypedHandler.execute");
         Document document = editor.getDocument();
         Project project = editor.getProject();
         CaretModel caretModel = editor.getCaretModel();
         Caret primaryCaret = caretModel.getPrimaryCaret();
         int offset = primaryCaret.getOffset();
-        String inputStr = String.valueOf(inputChar);
+        String inputStr = String.valueOf(originInputChar);
         String replacedValue = cachedReplaceCharMap.get(inputStr);
         if (lastChar == ReplaceChineseCharConstants.BIAS_LINE && replacedValue != null) {
             Runnable runnable = () -> {
@@ -79,15 +78,18 @@ public class ReplaceChineseCharTypedHandler implements TypedActionHandler {
                 primaryCaret.moveToOffset(offset);
             };
             WriteCommandAction.runWriteCommandAction(project, runnable);
-            this.lastChar = inputChar;
+            this.lastChar = originInputChar;
             return;
         }
         if (replacedValue != null) {
-            this.typedActionHandler.execute(editor, replacedValue.charAt(0), dataContext);
-            this.lastChar = inputChar;
+            char finalShowChar = replacedValue.charAt(0);
+            this.typedActionHandler.execute(editor, finalShowChar, dataContext);
+            this.lastChar = originInputChar;
+            System.out.println("字符：" + originInputChar + " 被替换为：" + finalShowChar);
             return;
         }
-        this.typedActionHandler.execute(editor, inputChar, dataContext);
-        this.lastChar = inputChar;
+        this.typedActionHandler.execute(editor, originInputChar, dataContext);
+        this.lastChar = originInputChar;
+        System.out.println("本次输入不需要替换");
     }
 }
